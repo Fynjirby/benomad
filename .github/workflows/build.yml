@@ -6,6 +6,8 @@ on:
       - main
     paths-ignore:
       - 'README.md'
+      - 'tasky.json'
+      - 'install_benomad.ben'
 
 permissions:
   contents: write
