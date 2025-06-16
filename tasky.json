@@ -1,0 +1,4 @@
+[
+  "change all fmt.Println(err) to return fmt.Errorf... (examples are in code) in core/Install.go",
+  "make a way to load bens from local"
+]
