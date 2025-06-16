@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/Slaves-Corp/benomad/core"
 )
@@ -82,22 +81,10 @@ func main() {
 			return
 		}
 
-		fmt.Println("What to edit: [B]en or [S]cript?")
-		var what string
-		fmt.Scanln(&what)
-		switch strings.ToLower(what) {
-		case "ben", "b":
-			err := core.EditBen(os.Args[2])
-			if err != nil {
-				fmt.Println(err)
-				return
-			}
-		case "script", "s":
-			err := core.EditScript(os.Args[2])
-			if err != nil {
-				fmt.Println(err)
-				return
-			}
+		err := core.EditBen(os.Args[2])
+		if err != nil {
+			fmt.Println(err)
+			return
 		}
 	case "run", "exec":
 		if len(os.Args) < 3 {
