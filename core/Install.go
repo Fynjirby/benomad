@@ -18,7 +18,7 @@ func InstallBen(url string) error {
 		return fmt.Errorf("%s is not a .ben file", thisBen)
 	}
 
-	if _, err := os.Stat(thisBen); err == nil {
+	if _, err := os.Stat(filepath.Join(BenDir, thisBen)); err == nil {
 		return fmt.Errorf("File already exists: %s", thisBen)
 	} else if !os.IsNotExist(err) {
 		return fmt.Errorf("Error checking file! %v", err)
