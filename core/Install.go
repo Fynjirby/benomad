@@ -44,26 +44,11 @@ func InstallBen(url string) error {
 	fmt.Scanln(&do)
 	switch strings.ToLower(do) {
 	case "y", "yes":
-		benFile, err := os.Create(filepath.Join(BenDir, meta.Name+".ben"))
+		err := os.MkdirAll(filepath.Join(BenDir, "scripts", meta.Name), 0755)
 		if err != nil {
-			return fmt.Errorf("Failed to create ben file! %v", err)
+			return fmt.Errorf("Failed to create Ben's script directory! %v", err)
 		}
-		defer benFile.Close()
-
-		_, err = fmt.Fprintf(benFile, `name: "%s"
-version: "%s"
-description: "%s"
-script: "%s"
-`,
-			meta.Name,
-			meta.Version,
-			meta.Description,
-			filepath.Join(BenDir, "scripts", filepath.Base(meta.Script)))
-		if err != nil {
-			return fmt.Errorf("Failed to write ben file! %v", err)
-		}
-
-		target, err := os.Create(filepath.Join(BenDir, "scripts", filepath.Base(meta.Script)))
+		target, err := os.Create(filepath.Join(BenDir, "scripts", meta.Name, filepath.Base(meta.Script)))
 		if err != nil {
 			return fmt.Errorf("Error creating a script file! %v", err)
 		}
@@ -88,9 +73,28 @@ script: "%s"
 
 		fmt.Println("Making script executable...")
 
-		err = exec.Command("chmod", "+x", filepath.Join(BenDir, "scripts", filepath.Base(meta.Script))).Run()
+		err = exec.Command("chmod", "+x", filepath.Join(BenDir, "scripts", meta.Name, filepath.Base(meta.Script))).Run()
 		if err != nil {
 			return fmt.Errorf("Failed making script executable! %v", err)
+		}
+
+		benFile, err := os.Create(filepath.Join(BenDir, meta.Name+".ben"))
+		if err != nil {
+			return fmt.Errorf("Failed to create ben file! %v", err)
+		}
+		defer benFile.Close()
+
+		_, err = fmt.Fprintf(benFile, `name: "%s"
+version: "%s"
+description: "%s"
+script: "%s"
+`,
+			meta.Name,
+			meta.Version,
+			meta.Description,
+			filepath.Join(BenDir, "scripts", meta.Name, filepath.Base(meta.Script)))
+		if err != nil {
+			return fmt.Errorf("Failed to write ben file! %v", err)
 		}
 
 		err = os.Remove(filepath.Join(BenDir, "temp", thisBen))
