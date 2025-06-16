@@ -1,0 +1,65 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'README.md'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.24.3'
+
+      - name: Build linux amd64
+        run: GOOS=linux GOARCH=amd64 go build -o dist/benomad-linux-amd .
+
+      - name: Build linux arm64
+        run: GOOS=linux GOARCH=arm64 go build -o dist/benomad-linux-arm .
+
+      - name: Build macos arm64
+        run: GOOS=darwin GOARCH=arm64 go build -o dist/benomad-macos-arm .
+
+      - name: Delete old tag (if exists)
+        run: |
+          git fetch --tags
+          if git rev-parse -q --verify "refs/tags/benomad" >/dev/null; then
+            git tag -d benomad
+            git push origin :refs/tags/benomad
+          fi
+
+      - name: Create and push new tag
+        run: |
+          git tag benomad
+          git push origin benomad
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: benomad
+          name: benomad
+          body: |
+            # files in release
+
+            - benomad for linux amd64
+            - benomad for linux arm64
+            - benomad for macos arm64
+          files: |
+            dist/benomad-linux-amd
+            dist/benomad-linux-arm
+            dist/benomad-macos-arm
+          draft: false
+          prerelease: false
