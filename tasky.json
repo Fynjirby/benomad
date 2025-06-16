@@ -1,5 +1,3 @@
 [
-  "make a way to load bens from local",
-  "installer should install script (check if exists already), before making ben",
-  "fix scripts problem (replacing script if its same name)"
+  "make a way to load bens from local"
 ]

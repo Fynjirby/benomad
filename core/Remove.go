@@ -26,7 +26,7 @@ func RemoveBen(thisBen string) error {
 	switch strings.ToLower(do) {
 	case "y", "yes":
 		if _, err := os.Stat(meta.Script); err == nil {
-			if err := os.Remove(meta.Script); err != nil {
+			if err := os.Remove(filepath.Join(BenDir, "scripts", meta.Name)); err != nil {
 				fmt.Printf("Warning: could not remove script! %v\n", err)
 			}
 		} else {
