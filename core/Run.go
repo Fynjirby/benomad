@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func RunBen(thisBen string) error {
+func RunBen(thisBen string, args []string) error {
 	if !strings.HasSuffix(thisBen, ".ben") {
 		thisBen += ".ben"
 	}
@@ -17,7 +17,7 @@ func RunBen(thisBen string) error {
 		fmt.Errorf("Error parsing %s! %v", thisBen, err)
 	}
 
-	cmd := exec.Command("/bin/bash", meta.Script)
+	cmd := exec.Command("/bin/bash", append([]string{meta.Script}, args...)...)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

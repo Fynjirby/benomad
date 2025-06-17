@@ -1,3 +1,4 @@
 [
-  "make a way to load bens from local"
+  "make a way to load bens from local",
+  "allow relative paths in script path in bens"
 ]
