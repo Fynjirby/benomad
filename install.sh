@@ -8,6 +8,9 @@ case "$OS-$ARCH" in
     linux-x86_64)   FILE="benomad-linux-amd" ;;
     linux-aarch64)  FILE="benomad-linux-arm" ;;
     darwin-arm64)   FILE="benomad-macos-arm" ;;
+    darwin-x86_64)   FILE="benomad-macos-amd" ;;
+    windows-x86_64)   FILE="benomad-windows-amd" ;;
+    windows-aarch64)   FILE="benomad-windows-arm" ;;
     *)
         echo "Unsupported OS/arch: $OS-$ARCH"
         exit 1
