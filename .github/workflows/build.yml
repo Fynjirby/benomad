@@ -8,6 +8,7 @@ on:
       - 'README.md'
       - 'tasky.json'
       - 'install_benomad.ben'
+      - 'install.sh'
 
 permissions:
   contents: write
@@ -35,6 +36,15 @@ jobs:
       - name: Build macos arm64
         run: GOOS=darwin GOARCH=arm64 go build -o dist/benomad-macos-arm .
 
+      - name: Build macos amd64
+        run: GOOS=darwin GOARCH=amd64 go build -o dist/benomad-macos-amd .
+
+      - name: Build windows amd64
+        run: GOOS=windows GOARCH=amd64 go build -o dist/benomad-windows-amd .
+        
+      - name: Build windows arm64
+        run: GOOS=windows GOARCH=arm64 go build -o dist/benomad-windows-arm .
+
       - name: Delete old tag (if exists)
         run: |
           git fetch --tags
@@ -59,9 +69,15 @@ jobs:
             - benomad for linux amd64
             - benomad for linux arm64
             - benomad for macos arm64
+            - benomad for macos amd64
+            - benomad for windows amd64
+            - benomad for windows arm64
           files: |
             dist/benomad-linux-amd
             dist/benomad-linux-arm
             dist/benomad-macos-arm
+            dist/benomad-macos-amd
+            dist/benomad-windows-amd
+            dist/benomad-windows-arm
           draft: false
           prerelease: false
