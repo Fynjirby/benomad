@@ -1,3 +1,3 @@
-module github.com/Slaves-Corp/benomad
+module github.com/Fynjirby/benomad
 
 go 1.24.3

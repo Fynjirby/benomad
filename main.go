@@ -4,23 +4,18 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Slaves-Corp/benomad/core"
+	"github.com/Fynjirby/benomad/core"
 )
 
 func main() {
 	var needMoreArgs string = "Provide more arguments. See help with 'benomad help'"
-
-	if len(os.Args) < 2 {
-		fmt.Println(needMoreArgs)
-		return
-	}
 
 	var helpMsg = `
   Welcome to benomad!
 
   Benomad is a bash script manager written on Go
   Visit our GitHub repo to see full command list, aliases, guidelines, etc
-  github.com/Slaves-Corp/benomad
+  github.com/Fynjirby/benomad
   
   Help:
    install <ben> - install some benomad metadata files (bens)
@@ -32,11 +27,16 @@ func main() {
    
   Thanks for using benomad!`
 
+	if len(os.Args) < 2 {
+		fmt.Println(helpMsg)
+		return
+	}
+
 	do := os.Args[1]
 	switch do {
 	default:
 		fmt.Println("Command not found. See help with 'benomad help'")
-	case "install", "add":
+	case "install", "add", "i":
 		if len(os.Args) < 3 {
 			fmt.Println(needMoreArgs)
 			return
@@ -47,13 +47,13 @@ func main() {
 			fmt.Println(err)
 			return
 		}
-	case "list", "ls":
+	case "list", "ls", "l":
 		err := core.ListBen()
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
-	case "remove", "delete":
+	case "remove", "delete", "rm", "rem", "r":
 		if len(os.Args) < 3 {
 			fmt.Println(needMoreArgs)
 			return
@@ -104,18 +104,13 @@ func main() {
 			fmt.Println(err)
 			return
 		}
-	case "new", "newben":
-		if len(os.Args) < 2 {
-			fmt.Println(needMoreArgs)
-			return
-		}
-
+	case "new", "newben", "b":
 		err := core.NewBen()
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
-	case "help", "man":
+	case "help", "man", "h":
 		fmt.Println(helpMsg)
 	}
 }
