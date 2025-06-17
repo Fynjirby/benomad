@@ -91,7 +91,26 @@ func main() {
 			fmt.Println(needMoreArgs)
 			return
 		}
-		err := core.RunBen(os.Args[2])
+
+		var args []string
+		if len(os.Args) > 3 {
+			args = os.Args[3:]
+		} else {
+			args = []string{}
+		}
+
+		err := core.RunBen(os.Args[2], args)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+	case "new", "newben":
+		if len(os.Args) < 2 {
+			fmt.Println(needMoreArgs)
+			return
+		}
+
+		err := core.NewBen()
 		if err != nil {
 			fmt.Println(err)
 			return
