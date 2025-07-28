@@ -4,27 +4,18 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"strings"
+	"path/filepath"
 )
 
-func RunBen(thisBen string, args []string) error {
-	if !strings.HasSuffix(thisBen, ".ben") {
-		thisBen += ".ben"
-	}
-
-	meta, err := ParseBen(BenDir, thisBen)
-	if err != nil {
-		fmt.Errorf("Error parsing %s! %v", thisBen, err)
-	}
-
-	cmd := exec.Command("/bin/bash", append([]string{meta.Script}, args...)...)
+func Run(this string, args []string) error {
+	cmd := exec.Command("/bin/bash", append([]string{filepath.Join(BenDir, this)}, args...)...)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
-	err = cmd.Run()
+	err := cmd.Run()
 	if err != nil {
-		return fmt.Errorf("Error running %s! %v", thisBen, err)
+		return fmt.Errorf("Error running %s! %v", this, err)
 	}
 
 	return nil

@@ -10,5 +10,3 @@ var (
 	HomeDir, _ = os.UserHomeDir()
 	BenDir     = filepath.Join(HomeDir, ".benomad")
 )
-
-// Type Meta is in core/Parse.go!
