@@ -18,12 +18,11 @@ func main() {
   github.com/Fynjirby/benomad
   
   Help:
-   install <ben> - install some benomad metadata files (bens)
-   remove <ben> - remove benomad 
-   list - list all bens installed
-   run <ben> - run a ben's script
-   info <ben> - see information about any ben
-   edit <ben> - edit ben file or script of ben
+   install <url> - install some script by url
+   remove <script> - remove script
+   list - list all scripts installed
+   run <script> - run a script
+   edit <script> - edit script
    
   Thanks for using benomad!`
 
@@ -42,13 +41,13 @@ func main() {
 			return
 		}
 
-		err := core.InstallBen(os.Args[2])
+		err := core.Install(os.Args[2])
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
 	case "list", "ls", "l":
-		err := core.ListBen()
+		err := core.List()
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -59,18 +58,7 @@ func main() {
 			return
 		}
 
-		err := core.RemoveBen(os.Args[2])
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-	case "info":
-		if len(os.Args) < 3 {
-			fmt.Println(needMoreArgs)
-			return
-		}
-
-		err := core.InfoBen(os.Args[2])
+		err := core.Remove(os.Args[2])
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -81,7 +69,7 @@ func main() {
 			return
 		}
 
-		err := core.EditBen(os.Args[2])
+		err := core.Edit(os.Args[2])
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -99,13 +87,7 @@ func main() {
 			args = []string{}
 		}
 
-		err := core.RunBen(os.Args[2], args)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-	case "new", "newben", "b":
-		err := core.NewBen()
+		err := core.Run(os.Args[2], args)
 		if err != nil {
 			fmt.Println(err)
 			return

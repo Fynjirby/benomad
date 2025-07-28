@@ -1,4 +1,0 @@
-name: "install_benomad"
-version: "@"
-description: "First ever public Ben. The benomad installer"
-script: "https://raw.githubusercontent.com/Fynjirby/benomad/refs/heads/main/install.sh"

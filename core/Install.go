@@ -10,45 +10,24 @@ import (
 	"strings"
 )
 
-func InstallBen(url string) error {
+func Install(url string) error {
 	CheckDir()
 
-	thisBen := filepath.Base(url)
-	if !strings.HasSuffix(thisBen, ".ben") {
-		return fmt.Errorf("%s is not a .ben file", thisBen)
-	}
+	this := filepath.Base(url)
 
-	if _, err := os.Stat(filepath.Join(BenDir, thisBen)); err == nil {
-		return fmt.Errorf("File already exists: %s", thisBen)
+	if _, err := os.Stat(filepath.Join(BenDir, this)); err == nil {
+		return fmt.Errorf("File already exists: %s", this)
 	} else if !os.IsNotExist(err) {
 		return fmt.Errorf("Error checking file! %v", err)
 	}
 
-	err := DownloadBen(url)
-	if err != nil {
-		return err
-	}
-
-	meta, err := ParseBen(filepath.Join(BenDir, "temp"), thisBen)
-	if err != nil {
-		return err
-	}
-
-	if meta.Version == "@" {
-		meta.Version = "rolling"
-	}
-
-	fmt.Println("Installing package", meta.Name+"@"+meta.Version)
+	fmt.Println("Installing script", this)
 	fmt.Println("Do you want to continue installing? y/n")
 	var do string
 	fmt.Scanln(&do)
 	switch strings.ToLower(do) {
 	case "y", "yes":
-		err := os.MkdirAll(filepath.Join(BenDir, "scripts", meta.Name), 0755)
-		if err != nil {
-			return fmt.Errorf("Failed to create Ben's script directory! %v", err)
-		}
-		target, err := os.Create(filepath.Join(BenDir, "scripts", meta.Name, filepath.Base(meta.Script)))
+		target, err := os.Create(filepath.Join(BenDir, this))
 		if err != nil {
 			return fmt.Errorf("Error creating a script file! %v", err)
 		}
@@ -56,7 +35,7 @@ func InstallBen(url string) error {
 
 		fmt.Println("Downloading script...")
 
-		resp, err := http.Get(meta.Script)
+		resp, err := http.Get(url)
 		if err != nil {
 			return fmt.Errorf("Error downloading script! %v", err)
 		}
@@ -73,44 +52,15 @@ func InstallBen(url string) error {
 
 		fmt.Println("Making script executable...")
 
-		err = exec.Command("chmod", "+x", filepath.Join(BenDir, "scripts", meta.Name, filepath.Base(meta.Script))).Run()
+		err = exec.Command("chmod", "+x", filepath.Join(BenDir, this)).Run()
 		if err != nil {
 			return fmt.Errorf("Failed making script executable! %v", err)
 		}
 
-		benFile, err := os.Create(filepath.Join(BenDir, meta.Name+".ben"))
-		if err != nil {
-			return fmt.Errorf("Failed to create ben file! %v", err)
-		}
-		defer benFile.Close()
-
-		_, err = fmt.Fprintf(benFile, `name: "%s"
-version: "%s"
-description: "%s"
-script: "%s"
-`,
-			meta.Name,
-			meta.Version,
-			meta.Description,
-			filepath.Join(BenDir, "scripts", meta.Name, filepath.Base(meta.Script)))
-		if err != nil {
-			return fmt.Errorf("Failed to write ben file! %v", err)
-		}
-
-		err = os.Remove(filepath.Join(BenDir, "temp", thisBen))
-		if err != nil {
-			return fmt.Errorf("Error cleaning temp! %v", err)
-		}
-
-		fmt.Println("Successfully installed", meta.Name+"@"+meta.Version)
+		fmt.Println("Successfully installed", this)
 		return nil
 	default:
 		fmt.Println("Installation canceled")
-		err := os.Remove(filepath.Join(BenDir, "temp", thisBen))
-		if err != nil {
-			return fmt.Errorf("Error cleaning temp! %v", err)
-		}
-		return nil
 	}
 
 	return nil

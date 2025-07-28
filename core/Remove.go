@@ -7,37 +7,23 @@ import (
 	"strings"
 )
 
-func RemoveBen(thisBen string) error {
-	if !strings.HasSuffix(thisBen, ".ben") {
-		thisBen += ".ben"
-	}
-	if _, err := os.Stat(filepath.Join(BenDir, thisBen)); os.IsNotExist(err) {
-		return fmt.Errorf("Ben '%s' not found!", thisBen)
+func Remove(this string) error {
+	if _, err := os.Stat(filepath.Join(BenDir, this)); os.IsNotExist(err) {
+		return fmt.Errorf("Script '%s' not found!", this)
 	}
 
-	meta, err := ParseBen(BenDir, thisBen)
-	if err != nil {
-		return err
-	}
-	fmt.Println("Removing package", meta.Name+"@"+meta.Version)
-	fmt.Println("Do you want to continue removing? y/n")
+	fmt.Println("Removing script", this)
+	fmt.Println("Do you want to continue? y/n")
 	var do string
 	fmt.Scanln(&do)
 	switch strings.ToLower(do) {
 	case "y", "yes":
-		if _, err := os.Stat(meta.Script); err == nil {
-			if err := os.Remove(filepath.Join(BenDir, "scripts", meta.Name)); err != nil {
-				fmt.Printf("Warning: could not remove script! %v\n", err)
-			}
-		} else {
-			fmt.Println("Script not found, skipping...")
-		}
-		err = os.Remove(filepath.Join(BenDir, thisBen))
+		err := os.Remove(filepath.Join(BenDir, this))
 		if err != nil {
-			return fmt.Errorf("Error removing Ben! %v", err)
+			return fmt.Errorf("Error removing! %v", err)
 		}
 
-		fmt.Println("Ben and script of", meta.Name+"@"+meta.Version, "were removed successfully!")
+		fmt.Println("Script", this, "were removed successfully!")
 
 		return nil
 	default:
