@@ -16,14 +16,15 @@ func main() {
   Benomad is a bash script manager written on Go
   Visit our GitHub repo to see full command list, aliases, guidelines, etc
   github.com/Fynjirby/benomad
-  
+
   Help:
    install <url> - install some script by url
    remove <script> - remove script
    list - list all scripts installed
    run <script> - run a script
    edit <script> - edit script
-   
+   path  - add to shell env
+
   Thanks for using benomad!`
 
 	if len(os.Args) < 2 {
@@ -92,6 +93,13 @@ func main() {
 			fmt.Println(err)
 			return
 		}
+	case "path":
+		err := core.Path()
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
 	case "help", "man", "h":
 		fmt.Println(helpMsg)
 	}
