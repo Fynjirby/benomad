@@ -18,7 +18,7 @@ func detectShell() string {
 	}
 	trimmed := strings.TrimSpace(out.String())
 	splitted := strings.Split(trimmed, "/")
-	shell := splitted[len(splitted)-1]
+	shell := strings.ReplaceAll(splitted[len(splitted)-1], "-", "")
 	return shell
 }
 
