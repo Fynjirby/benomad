@@ -1,38 +1,29 @@
 package core
 
 import (
-	"bytes"
 	"fmt"
 	"os"
-	"os/exec"
-	"strings"
+	"path/filepath"
 )
 
 func detectShell() string {
-	cmd := exec.Command("ps", "-p", fmt.Sprintf("%d", os.Getppid()), "-o", "comm=")
-	var out bytes.Buffer
-	cmd.Stdout = &out
-	err := cmd.Run()
-	if err != nil {
+	shell := os.Getenv("SHELL")
+	if shell == "" {
 		return "unknown"
 	}
-	trimmed := strings.TrimSpace(out.String())
-	splitted := strings.Split(trimmed, "/")
-	shell := strings.ReplaceAll(splitted[len(splitted)-1], "-", "")
-	return shell
+	return filepath.Base(shell)
 }
 
 func Path() error {
 	CheckDir()
-	ben := BenDir
 	shell := detectShell()
 	switch shell {
 	case "bash", "zsh":
-		fmt.Printf(`export PATH="%s:$PATH"`+"\n", ben)
+		fmt.Printf(`export PATH="%s:$PATH"`+"\n", BenDir)
 	case "fish":
-		fmt.Printf(`set -gx PATH %s $PATH`+"\n", ben)
+		fmt.Printf(`set -gx PATH %s $PATH`+"\n", BenDir)
 	case "nu":
-		fmt.Printf(`$env.PATH = ($env.PATH | prepend (%s))`+"\n", ben)
+		fmt.Printf(`$env.PATH = ($env.PATH | prepend (%s))`+"\n", BenDir)
 	default:
 		fmt.Fprintf(os.Stderr, "Unsupported shell: %s\n", shell)
 	}
